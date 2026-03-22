@@ -32,7 +32,12 @@ dotenv.config();
 const app = express();
 
 // 2. Middleware
-app.use(cors());
+// Use this EXACT configuration
+app.use(cors({
+  origin: "*", // This allows ANY frontend to talk to it for now
+  methods: ["GET", "POST", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"]
+}));
 app.use(express.json());
 
 // 3. Health check (Verify if the backend is live by visiting your Vercel URL)
