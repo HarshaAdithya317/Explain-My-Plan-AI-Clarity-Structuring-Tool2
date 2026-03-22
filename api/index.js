@@ -6,21 +6,24 @@ import analyzeRoute from "../backend/routes/analyze.js";
 dotenv.config();
 const app = express();
 
-// 1. IMPROVED CORS BLOCK
-app.use(cors({
-  origin: "*", // Allows your frontend URL to connect
-  methods: ["GET", "POST", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-  credentials: true
-}));
-
-// 2. EXPLICIT OPTIONS HANDLER (The Fix for 'Preflight')
-app.options('*', cors()); 
+// --- MANUAL CORS HEADERS (THE FIX) ---
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  
+  // Handle the Preflight (OPTIONS) request immediately
+  if (req.method === "OPTIONS") {
+    return res.status(200).end();
+  }
+  next();
+});
+// -------------------------------------
 
 app.use(express.json());
 
 app.get("/", (req, res) => {
-  res.send("Backend is live!");
+  res.send("Backend is live and CORS-ready!");
 });
 
 app.use("/analyze", analyzeRoute);
