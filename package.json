@@ -14,7 +14,7 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
+  "type": "module",
   "bugs": {
     "url": "https://github.com/HarshaAdithya317/Explain-My-Plan-AI-Clarity-Structuring-Tool/issues"
   },
