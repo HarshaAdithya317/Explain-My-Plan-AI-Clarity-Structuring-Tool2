@@ -1,13 +1,12 @@
 import express from "express";
 import dotenv from "dotenv";
-import analyzeRoute from "../backend/routes/analyze.js";
+// CRITICAL: Double check this path. Is 'backend' really a folder inside your root?
+import analyzeRoute from "../backend/routes/analyze.js"; 
 
 dotenv.config();
 const app = express();
 
-app.use(express.json());
-
-// --- RAW HEADER INJECTION ---
+// --- RAW HEADER INJECTION (THE FIX) ---
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
@@ -18,6 +17,8 @@ app.use((req, res, next) => {
   }
   next();
 });
+
+app.use(express.json());
 
 // Health check to verify the function is even starting
 app.get("/api/health", (req, res) => {
