@@ -1,35 +1,20 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import analyzeRoute from "../backend/routes/analyze.js";
+import analyzeRoute from "./analyze.js"; 
 
 dotenv.config();
 const app = express();
 
-app.use(cors({
-  origin: "*", // for now (safe for assignment)
-}));
-
+// 1. Better CORS setup
+app.use(cors());
 app.use(express.json());
 
-app.post("/analyze", (req, res) => {
-  const mockResponse = {
-    goal: "Build a website",
-    method: "Use React and deploy",
-    steps: ["Plan", "Build", "Deploy"],
-    timeline: "Not defined",
-    resources: "Not defined",
-    missing_elements: {
-      goal_clarity: "Partial",
-      execution_steps: "Basic",
-      resources: "Missing",
-      timeline: "Missing"
-    },
-    simplified_version: "Build and deploy a website",
-    action_steps: ["Choose stack", "Code", "Deploy"]
-  };
+// 2. Health check (visit this in browser to test)
+app.get("/", (req, res) => res.send("API is awake!"));
 
-  res.json(mockResponse);
-});
+// 3. Link the external route
+// This makes the endpoint: your-url.com/analyze
+app.use("/analyze", analyzeRoute);
 
 export default app;
