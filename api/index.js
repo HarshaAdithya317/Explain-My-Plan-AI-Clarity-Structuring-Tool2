@@ -1,12 +1,13 @@
 import express from "express";
 import dotenv from "dotenv";
-// CRITICAL: Double check this path. Is 'backend' really a folder inside your root?
 import analyzeRoute from "../backend/routes/analyze.js"; 
 
 dotenv.config();
 const app = express();
 
-// --- RAW HEADER INJECTION (THE FIX) ---
+app.use(express.json());
+
+// --- MANUAL CORS (THE REAL FIX) ---
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
@@ -18,13 +19,12 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(express.json());
-
-// Health check to verify the function is even starting
-app.get("/api/health", (req, res) => {
-  res.status(200).json({ status: "ok", message: "Backend is alive" });
+// Use a catch-all for the root or simple paths
+app.get("/", (req, res) => {
+  res.json({ status: "ok", message: "Backend is fully live" });
 });
 
+// This matches the /analyze path on the main URL
 app.use("/analyze", analyzeRoute);
 
 export default app;
